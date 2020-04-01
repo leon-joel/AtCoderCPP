@@ -8,14 +8,14 @@
       "name": "(lldb) 起動",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/${fileBasenameNoExtension}",
+      "program": "${fileDirname}/bin/${fileBasenameNoExtension}",
       "args" : [],
       // "args": [
       //   "<",
       //   "input.txt"
       // ],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${fileDirname}/bin",
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb"

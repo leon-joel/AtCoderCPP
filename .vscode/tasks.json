@@ -12,10 +12,10 @@
         "-std=c++11",
         "${file}",
         "-o",
-        "${fileDirname}/${fileBasenameNoExtension}"
+        "${fileDirname}/bin/${fileBasenameNoExtension}"
       ],
       "options": {
-        "cwd": "/usr/bin"
+        "cwd": "/usr/local/bin"
       },
       "problemMatcher": [
         "$gcc"
