@@ -51,14 +51,14 @@ istream &operator>>(istream &is, const mint &a) { return is >> a.x; }
 ostream &operator<<(ostream &os, const mint &a) { return os << a.x; }
 
 const int ILEN = 205;
-const int JLEN = 1805;
+const int JLEN = 2000;
 const int KLEN = 2;
-mint DPM[ILEN][JLEN][KLEN];
-mint DPD[ILEN][JLEN][KLEN];
+ll DPM[ILEN][JLEN][KLEN];
+ll DPD[ILEN][JLEN][KLEN];
 const int Match = 1;
 const int Free = 0;
 
-void SolveKetaDP(mint dp[ILEN][JLEN][KLEN], string &s)
+void SolveKetaDP(ll dp[ILEN][JLEN][KLEN], string &s)
 {
 	dp[0][0][Match] = 1;
 
@@ -69,7 +69,7 @@ void SolveKetaDP(mint dp[ILEN][JLEN][KLEN], string &s)
 		auto n = s[i] - '0';
 		rep (j, JLEN) {
 			rep (k, 2) {
-				if (dp[i][j][k].x == 0) continue;
+				if (dp[i][j][k] == 0) continue;
 
 				rep (nx, 10) {
 					auto nj = j + nx;
@@ -83,6 +83,7 @@ void SolveKetaDP(mint dp[ILEN][JLEN][KLEN], string &s)
 					}
 
 					dp[ni][nj][nk] += dp[i][j][k];
+					dp[ni][nj][nk] %= mod;
 				}
 			}
 		}
@@ -108,11 +109,14 @@ int main()
 	// ※ 整数問題の場合、all 0
 	// の分を1個マイナスするのを忘れずに！先行0にも要注意！ ※
 	// MOD系は、最後のMODを忘れないことと、MODの前処理で負数にしないこと
-	mint ans = 0;
+	ll ans = 0;
 	for (int j = 1; j < JLEN; j++){
 		auto m = DPM[size(M)][j][0] + DPM[size(M)][j][1];
+		m %= mod;
 		auto d = DPD[size(D)][j][0] + DPD[size(D)][j][1];
-		ans += m * d;
+		d %= mod;
+		ans += (m * d) % mod;
+		ans %= mod;
 	}			
 	cout << ans << endl;
 	return 0;
