@@ -9,7 +9,8 @@ using P = pair<int, int>;
 // https://youtu.be/L8grWxBlIZ4?t=9858
 // https://youtu.be/ERZuLAxZffQ?t=4807 : optimize
 // https://youtu.be/8uowVvQ_-Mo?t=1329 : division
-const int mod = 1000000007;
+const int mod = 1000000009;
+// const int mod = 1000000007;
 // const int mod = 998244353;
 struct mint {
 	ll x; // typedef long long ll;
@@ -51,14 +52,25 @@ istream &operator>>(istream &is, const mint &a) { return is >> a.x; }
 ostream &operator<<(ostream &os, const mint &a) { return os << a.x; }
 
 const int ILEN = 205;
-const int JLEN = 2000;
+const int JLEN = 1805;
 const int KLEN = 2;
-ll DPM[ILEN][JLEN][KLEN];
-ll DPD[ILEN][JLEN][KLEN];
+mint DPM[ILEN][JLEN][KLEN];
+mint DPD[ILEN][JLEN][KLEN];
 const int Match = 1;
 const int Free = 0;
 
-void SolveKetaDP(ll dp[ILEN][JLEN][KLEN], string &s)
+void DumpDP(mint dp[ILEN][JLEN][KLEN], int jmax, int slen){
+	rep (j, jmax+1) {
+		cout << j << ": ";
+		rep(i, slen+1) {
+			cout << dp[i][j][0] << "-" << dp[i][j][1] << " ";
+		}
+		cout << ": " << dp[slen][j][0] + dp[slen][j][1] << endl;
+	}
+	cout << endl;
+}
+
+void SolveKetaDP(mint dp[ILEN][JLEN][KLEN], string &s)
 {
 	dp[0][0][Match] = 1;
 
@@ -66,24 +78,23 @@ void SolveKetaDP(ll dp[ILEN][JLEN][KLEN], string &s)
 	// ※逆順にすると、遷移も逆方向にしないといけないので ※桁数を逆にする方が簡単
 	rep (i, size(s)) {
 		auto ni = i + 1;
-		auto n = s[i] - '0';
+		auto x = s[i] - '0';
 		rep (j, JLEN) {
 			rep (k, 2) {
-				if (dp[i][j][k] == 0) continue;
+				if (dp[i][j][k].x == 0) continue;
 
 				rep (nx, 10) {
 					auto nj = j + nx;
 					auto nk = k; // ※nkは毎回初期化しないとおかしくなるよ！
 					if (k == Match) {
-						if (n < nx) continue;
-						if (nx < n) {
+						if (x < nx) continue;
+						if (nx < x) {
 							nk = Free;
 						}
 					} else {
 					}
 
 					dp[ni][nj][nk] += dp[i][j][k];
-					dp[ni][nj][nk] %= mod;
 				}
 			}
 		}
@@ -102,21 +113,27 @@ int main()
 	// 桁DP
 	// dp[桁（上位から）][合計][制限なし/あり] = パターン数
 	SolveKetaDP(DPM, M);
+	// DumpDP(DPM, 11, size(M));
+
 	SolveKetaDP(DPD, D);
+	// DumpDP(DPD, 11, size(D));
+
+	// string filename = "test_my.txt";
+	// ofstream f;
+	// f.open(filename, ios::out);
 
 	// 結果を計算
 	// ※ 配るDPの場合、結果は S.Length(＝最後のi + 1) に格納されている
 	// ※ 整数問題の場合、all 0
 	// の分を1個マイナスするのを忘れずに！先行0にも要注意！ ※
 	// MOD系は、最後のMODを忘れないことと、MODの前処理で負数にしないこと
-	ll ans = 0;
+	mint ans = 0;
 	for (int j = 1; j < JLEN; j++){
 		auto m = DPM[size(M)][j][0] + DPM[size(M)][j][1];
-		m %= mod;
 		auto d = DPD[size(D)][j][0] + DPD[size(D)][j][1];
-		d %= mod;
-		ans += (m * d) % mod;
-		ans %= mod;
+		ans += m * d;
+
+		// f << j << ": " << ans << ": " << m * d << endl;
 	}			
 	cout << ans << endl;
 	return 0;
