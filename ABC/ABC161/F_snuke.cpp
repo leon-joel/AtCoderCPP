@@ -28,11 +28,11 @@ int main()
 		tmp %= x;
 		if (tmp == 1) {
 			++ans;
-			cout << "  1: " << x << endl;
+			cerr << "  1: " << x << endl;
 		}
 	}
 	for (auto &&x : enumDivisor(n-1)){
-		cout << "  2: " << x << endl;
+		cerr << "  2: " << x << endl;
 	}
 	
 	ans += enumDivisor(n - 1).size() - 1;
