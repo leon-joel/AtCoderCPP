@@ -243,3 +243,5 @@ fabric.properties
 
 **/bin/*
 
+*.out
+**/*.out.dSYM/**
