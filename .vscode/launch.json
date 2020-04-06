@@ -14,7 +14,7 @@
       //   "<",
       //   "input.txt"
       // ],
-      "stopAtEntry": true,
+      "stopAtEntry": false,
       "cwd": "${fileDirname}/bin",
       "environment": [],
       "externalConsole": false,

@@ -8,9 +8,10 @@
       "label": "g++ build active file",
       "command": "/usr/local/bin/g++",
       "args": [
+        "-DHOME",
         "-g",
-        // "-std=c++11",
-        "-std=c++17",
+        "-std=c++14",
+        // "-std=c++17",
         "${file}",
         "-o",
         "${fileDirname}/bin/${fileBasenameNoExtension}"
@@ -53,6 +54,7 @@
       "label": "Boost Test",
       "command": "/usr/local/bin/g++",
       "args": [
+        "-DHOME",
         "-g",
         // "-std=c++11",
         "-std=c++17",
