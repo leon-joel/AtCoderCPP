@@ -1,5 +1,5 @@
 {
-// tasks.json 形式の詳細についての資料は、
+  // tasks.json 形式の詳細についての資料は、
   // https://go.microsoft.com/fwlink/?LinkId=733558 をご覧ください
   "version": "2.0.0",
   "tasks": [
@@ -11,6 +11,55 @@
         "-g",
         // "-std=c++11",
         "-std=c++17",
+        "${file}",
+        "-o",
+        "${fileDirname}/bin/${fileBasenameNoExtension}"
+      ],
+      "options": {
+        "cwd": "/usr/local/bin"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": "build"
+    },
+    // {
+    //   "type": "shell",
+    //   "label": "GoogleTest",
+    //   "command": "/usr/local/bin/g++",
+    //   "args": [
+    //     "-g",
+    //     // "-std=c++11",
+    //     "-std=c++17",
+    //     "-I/usr/local/include",
+    //     "-L/usr/local/lib",
+    //     "-pthread",
+    //     "-lgtest",
+    //     "-lgtest_main",
+    //     "${file}",
+    //     "-o",
+    //     "${fileDirname}/bin/${fileBasenameNoExtension}"
+    //   ],
+    //   "options": {
+    //     "cwd": "/usr/local/bin"
+    //   },
+    //   "problemMatcher": [
+    //     "$gcc"
+    //   ],
+    //   "group": "build"
+    // },
+    {
+      "type": "shell",
+      "label": "Boost Test",
+      "command": "/usr/local/bin/g++",
+      "args": [
+        "-g",
+        // "-std=c++11",
+        "-std=c++17",
+        "-D_GLIBCXX_USE_CXX11_ABI=0",
+        "-I/usr/local/include",
+        "-L/usr/local/lib",
+        "-lboost_unit_test_framework",
         "${file}",
         "-o",
         "${fileDirname}/bin/${fileBasenameNoExtension}"

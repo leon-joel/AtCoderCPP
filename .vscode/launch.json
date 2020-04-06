@@ -14,11 +14,11 @@
       //   "<",
       //   "input.txt"
       // ],
-      "stopAtEntry": false,
+      "stopAtEntry": true,
       "cwd": "${fileDirname}/bin",
       "environment": [],
       "externalConsole": false,
-      "MIMode": "lldb"
+      "MIMode": "lldb",
     }
   ]
 }
