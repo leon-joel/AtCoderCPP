@@ -61,15 +61,13 @@ class Solver
 	Solver() {}
 	void Solve(istream &cin, ostream &cout)
 	{
-		int N, K;
-		cin >> N >> K;
+		int A, B, C, D;
+		cin >> A >> B >> C >> D;
 
-		for (size_t i = 0; i < 40; i++)
-		{
-			if (N < pow(K, i)){
-				cout << i << endl;
-				return;
-			}
+		if (A * B < C * D){
+			cout << C * D << endl;
+		}else{
+			cout << A * B << endl;
 		}
 	}
 };
