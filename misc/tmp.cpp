@@ -17,8 +17,9 @@ static void DumpArray(const ArrayT &arr)
 	cerr << endl;
 #endif
 }
-template<typename T>
-static void DumpGrid(const vector<vector<T>> &grid){
+template <typename T>
+static void DumpGrid(const vector<vector<T>> &grid)
+{
 #if defined(HOME)
 	REP (i, grid.size()) {
 		REP (j, grid[i].size()) {
@@ -29,8 +30,9 @@ static void DumpGrid(const vector<vector<T>> &grid){
 #endif
 }
 template <class ArrayT, typename T>
-static void InitArray(ArrayT &arr, T initValue){
-	for (auto &v : arr){
+static void InitArray(ArrayT &arr, T initValue)
+{
+	for (auto &v : arr) {
 		v = initValue;
 	}
 }
@@ -61,14 +63,37 @@ class Solver
 	Solver() {}
 	void Solve(istream &cin, ostream &cout)
 	{
-		int A, B, C, D;
-		cin >> A >> B >> C >> D;
+		long A, B, X;
+		cin >> A >> B >> X;
 
-		if (A * B < C * D){
-			cout << C * D << endl;
-		}else{
-			cout << A * B << endl;
+		// 1桁MAX
+		long ansN = 0;
+		for (size_t i = 1; i <= 10; i++) {
+			auto n = pow(10, i - 1);
+			auto minPrice = A * n + B * i;
+			if (X < minPrice) break;
+
+			n = pow(10, i) - 1;
+			auto maxPrice = A * n + B * i;
+			cerr << i << ": " << minPrice << "-" << maxPrice << endl;
+			if (maxPrice < X){
+				ansN = n;
+				continue;
+			}
+
+			// i桁数に確定
+			// price = A * N + B * i
+			// price - B * i = A * N
+			// (price - B * i) / A = N
+			n = (X - B * i) / A;
+			ansN = n;
 		}
+
+		if (pow(10, 9) < ansN){
+			ansN = pow(10, 9);
+		}
+
+		cout << ansN << endl;
 	}
 };
 } // namespace My
