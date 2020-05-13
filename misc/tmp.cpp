@@ -57,43 +57,51 @@ static bool ReplaceIfBigger(T &target, T value)
 	}
 }
 
+struct Station {
+	Station(int c, int s, int f) {
+		C = c;
+		S = s;
+		F = f;
+	}
+	int C;
+	int S;
+	int F;
+};
+
 class Solver
 {
   public:
 	Solver() {}
 	void Solve(istream &cin, ostream &cout)
 	{
-		long A, B, X;
-		cin >> A >> B >> X;
+		int N;
+		cin >> N;
 
-		// 1桁MAX
-		long ansN = 0;
-		for (size_t i = 1; i <= 10; i++) {
-			auto n = pow(10, i - 1);
-			auto minPrice = A * n + B * i;
-			if (X < minPrice) break;
+		vector<Station> vec;
+		REP (i, N-1) {
+			int C, S, F;
 
-			n = pow(10, i) - 1;
-			auto maxPrice = A * n + B * i;
-			cerr << i << ": " << minPrice << "-" << maxPrice << endl;
-			if (maxPrice < X){
-				ansN = n;
-				continue;
+			cin >> C >> S >> F;
+			vec.emplace_back(C, S, F);
+		}
+
+		REP(i, N-1){
+			// i番目から出発
+			int t = 0;	// 現在時刻
+			for (size_t j = i; j < N - 1; j++) {
+				const auto& s = vec[j];
+				if (t <= s.S){
+					// Sに出発するので次の駅に着くのは S+C 秒後
+					t = s.S + s.C;
+				}else {
+					// Sより後に出発する
+					auto cycle = (t - s.S + s.F - 1) / s.F;
+					t = s.S + s.F * cycle + s.C;
+				}
 			}
-
-			// i桁数に確定
-			// price = A * N + B * i
-			// price - B * i = A * N
-			// (price - B * i) / A = N
-			n = (X - B * i) / A;
-			ansN = n;
+			cout << t << endl;
 		}
-
-		if (pow(10, 9) < ansN){
-			ansN = pow(10, 9);
-		}
-
-		cout << ansN << endl;
+		cout << 0 << endl;
 	}
 };
 } // namespace My
