@@ -70,8 +70,8 @@ static bool ReplaceIfBigger(T &target, T value)
 
 #define INF 1LL << 60
 
-using Edge = pair<ll, ll>;          //辺
-using Graph = vector<vector<Edge>>; //隣接リスト
+using Edge = pair<ll, ll>;
+using Graph = vector<vector<Edge>>; 
 
 class Solver
 {
@@ -79,40 +79,39 @@ class Solver
 	Solver() {}
 
 	ll V, E, r;
+	// 隣接リスト Graph[from頂点] = {to頂点, to頂点への距離}
 	Graph G;
+	// dist[行き先頂点] = start地点からの最短距離
 	vector<ll> dist;
 
+	// シンプルにダイクストラを適用するだけの問題
 	void dijkstra()
 	{
-		//{距離, 頂点}のpairで格納
-		//距離の小さいものから取り出す
-		priority_queue<pair<ll, ll>, vector<pair<ll, ll>>,
-		               greater<pair<ll, ll>>>
-		    que;
+		// {距離, 頂点} のpairで格納 ※Graphの要素Edge(pair)とは異なる点に注意！
+		// 距離が最も小さいものを取り出すのでGreaterを指定している ※降順ソートして、後ろから取り出すイメージ
+		priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> que;
+		//距離0の頂点rを入れる
+		que.emplace(0, r);
 
-		que.push({0, r}); //距離0の頂点rを入れる
-
-		while (!que.empty()) { //キューが空になるまで
-
-			auto now = que.top();
+		while (!que.empty()) {
+			// キューの先頭を取り出す
+			auto p = que.top();
 			que.pop();
-			//キューの先頭を取り出す
-			ll nowDist = now.first;  //取り出した距離
-			ll nowNode = now.second; //取り出した頂点
+			ll curDist = p.first;  //取り出した距離
+			ll curNode = p.second; //取り出した頂点
 
-			//取り出した距離が、今現在わかっている頂点の距離より長い時スルーする
-			if (nowDist > dist[nowNode]) continue;
+			//(optional)取り出した距離が、今現在わかっている頂点の距離より長い時スルーする
+			if (dist[curNode] < curDist) continue;
 
-			for (Edge next : G[nowNode]) {
-				//行ける頂点について
-				ll nextDir = next.first;     //辺の行き先
-				ll nextWeight = next.second; //辺の重み
+			// 行ける頂点にすべてについて距離を更新
+			for (auto&& next : G[curNode]) {
+				ll nextNode = next.first;     //辺の行き先
+				ll nextWeight = next.second;  //辺の重み
 
-				//更新しても距離を小さくできないときスルーする
-				if (dist[nextDir] <= dist[nowNode] + nextWeight) continue;
-				dist[nextDir] =
-				    min(dist[nextDir], dist[nowNode] + nextWeight); //更新する
-				que.push({dist[nextDir], nextDir}); //キューに追加
+				// 距離を小さくできたときだけキューに追加
+				if (ReplaceIfSmaller(dist[nextNode], dist[curNode] + nextWeight)){
+					que.emplace(dist[nextNode], nextNode);
+				}
 			}
 		}
 	}
@@ -124,12 +123,13 @@ class Solver
 		for (int i = 0; i < E; i++) {
 			int s, t, d;
 			cin >> s >> t >> d;
-			G[s].push_back({t, d});
+			G[s].emplace_back(t, d);
 		}
 
 		dist.resize(V, INF);
 		dist[r] = 0;
 		dijkstra();
+
 		for (ll x : dist) {
 			if (x == INF) {
 				cout << "INF" << endl;
