@@ -58,7 +58,8 @@ static bool ReplaceIfBigger(T &target, T value)
 }
 
 struct Station {
-	Station(int c, int s, int f) {
+	Station(int c, int s, int f)
+	{
 		C = c;
 		S = s;
 		F = f;
@@ -74,34 +75,44 @@ class Solver
 	Solver() {}
 	void Solve(istream &cin, ostream &cout)
 	{
-		int N;
-		cin >> N;
+		int N, M;
+		cin >> N >> M;
 
-		vector<Station> vec;
-		REP (i, N-1) {
-			int C, S, F;
-
-			cin >> C >> S >> F;
-			vec.emplace_back(C, S, F);
+		vector<int> fs[10];
+		REP (i, M) {
+			int a, b;
+			cin >> a >> b;
+			--a;
+			--b;
+			fs[a].emplace_back(b);
+			fs[b].emplace_back(a);
 		}
+		// for (auto &&ff : fs) {
+		// 	for (auto &&f : ff) {
+		// 		cout << f << " ";
+		// 	}
+		// 	cout << endl;
+		// }
 
-		REP(i, N-1){
-			// i番目から出発
-			int t = 0;	// 現在時刻
-			for (size_t j = i; j < N - 1; j++) {
-				const auto& s = vec[j];
-				if (t <= s.S){
-					// Sに出発するので次の駅に着くのは S+C 秒後
-					t = s.S + s.C;
-				}else {
-					// Sより後に出発する
-					auto cycle = (t - s.S + s.F - 1) / s.F;
-					t = s.S + s.F * cycle + s.C;
+		REP (i, N) {
+			// 友達の友達をsetに追加していく
+			set<int> ffset;
+			for (auto &&f : fs[i]) {
+				auto ff = fs[f];
+				for (auto &&j : ff) {
+					if (i == j) continue;
+					ffset.insert(j);
 				}
 			}
-			cout << t << endl;
+			// 「友達の友達」の友達に自分が含まれていたスキップ
+			int ans = 0;
+			for (auto &&f : ffset) {
+				if (fs[f].end() == find(fs[f].begin(), fs[f].end(), i)){
+					++ans;
+				}
+			}
+			cout << ans << endl;
 		}
-		cout << 0 << endl;
 	}
 };
 } // namespace My
